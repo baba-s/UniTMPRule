@@ -53,14 +53,15 @@ namespace Kogane
 		/// </summary>
 		public void ApplyTo( TMP_Text tmpText )
 		{
-			tmpText.font         = m_fontAsset;
-			tmpText.fontMaterial = m_material;
-			tmpText.fontStyle    = m_fontStyles;
-			tmpText.color        = m_color;
+			tmpText.font               = m_fontAsset;
+			tmpText.fontSharedMaterial = m_material;
+			tmpText.fontStyle          = m_fontStyles;
+			tmpText.color              = m_color;
 
 			if ( m_isApplyFontSize )
 			{
-				tmpText.fontSize = m_fontSize;
+				tmpText.fontSize    = m_fontSize;
+				tmpText.fontSizeMax = m_fontSize;
 			}
 		}
 	}

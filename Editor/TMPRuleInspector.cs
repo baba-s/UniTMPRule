@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using UnityEditor;
+using UnityEngine;
 
 namespace Kogane.Internal
 {
@@ -43,9 +44,14 @@ namespace Kogane.Internal
 
 			index = EditorGUILayout.Popup( "ルール名", index, options );
 
+			if ( GUILayout.Button( "設定ファイル" ) )
+			{
+				EditorGUIUtility.PingObject( m_settings );
+			}
+
 			if ( !EditorGUI.EndChangeCheck() ) return;
 
-			var ruleName = index == -1
+			var ruleName = index == 0
 					? TMPRule.INVALID_RULE_NAME
 					: list[ index - 1 ].Name
 				;

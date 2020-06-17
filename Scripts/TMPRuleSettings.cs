@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 
 namespace Kogane
@@ -44,5 +45,25 @@ namespace Kogane
 		{
 			return Array.Find( m_instance.m_list, x => x.Name == name );
 		}
+
+#if UNITY_EDITOR
+		/// <summary>
+		/// ゲームを開始する時に呼び出されます
+		/// </summary>
+		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSceneLoad )]
+		private static void Initialize()
+		{
+			if ( m_instance == null ) return;
+
+			var guid = UnityEditor.AssetDatabase
+					.FindAssets( $"t:{nameof( TMPRuleSettings )}" )
+					.First()
+				;
+
+			var path = UnityEditor.AssetDatabase.GUIDToAssetPath( guid );
+
+			m_instance = UnityEditor.AssetDatabase.LoadAssetAtPath<TMPRuleSettings>( path );
+		}
+#endif
 	}
 }

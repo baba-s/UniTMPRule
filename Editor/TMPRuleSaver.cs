@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
 
 namespace Kogane.Internal
 {
@@ -26,13 +27,30 @@ namespace Kogane.Internal
 		/// </summary>
 		static TMPRuleSaver()
 		{
-			EditorSceneManager.sceneSaving += ( scene, path ) => OnSceneSaved( scene, path );
+			EditorSceneManager.sceneSaving += ( scene, path ) =>
+			{
+				var settings = TMPRuleEditorSettings.GetInstance();
+
+				// 経過時間のログを出力しない場合
+				if ( !settings.EnabledLog )
+				{
+					OnSceneSaving();
+					return;
+				}
+
+				// 経過時間のログを出力する場合
+				var sw = new Stopwatch();
+				sw.Start();
+				OnSceneSaving();
+				sw.Stop();
+				Debug.LogFormat( settings.LogFormat, sw.Elapsed.TotalSeconds );
+			};
 		}
 
 		/// <summary>
 		/// シーンファイルを開いた時に TMPRule の設定を反映します
 		/// </summary>
-		private static void OnSceneSaved( Scene scene, string path )
+		private static void OnSceneSaving()
 		{
 			if ( EditorApplication.isPlaying ) return;
 			ApplyAll();

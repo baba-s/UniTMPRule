@@ -13,7 +13,7 @@ namespace Kogane.Internal
 		//================================================================================
 		private static readonly string PACKAGE_NAME        = "UniTMPRule";
 		private static readonly bool   DEFAULT_ENABLED_LOG = false;
-		private static readonly string DEFAULT_LOG_FORMAT  = $"[{PACKAGE_NAME}] シーンの保存にかかった時間：{0} 秒";
+		private static readonly string DEFAULT_LOG_FORMAT  = $@"[{PACKAGE_NAME}] シーンの保存にかかった時間：{{0}} 秒";
 
 		//================================================================================
 		// 変数(static)

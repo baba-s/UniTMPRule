@@ -1,22 +1,30 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using Kogane.Internal;
 using TMPro;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace Kogane.Internal
+namespace Kogane
 {
 	/// <summary>
 	/// TMPRuleSettings の Inspector の表示を変更するエディタ拡張
 	/// </summary>
 	[CustomEditor( typeof( TMPRuleSettings ) )]
-	internal sealed class TMPRuleSettingsInspector : Editor
+	public sealed class TMPRuleSettingsInspector : Editor
 	{
 		//==============================================================================
 		// 変数
 		//==============================================================================
 		private SerializedProperty m_property;
 		private ReorderableList    m_reorderableList;
+
+		//==============================================================================
+		// デリゲート(static)
+		//==============================================================================
+		public new static Action<TMPRuleSettings> OnHeaderGUI { get; set; }
+		public static     Action<TMPRuleSettings> OnFooterGUI { get; set; }
 
 		//==============================================================================
 		// 関数
@@ -53,7 +61,13 @@ namespace Kogane.Internal
 		/// <summary>
 		/// リストの要素を描画する時に呼び出されます
 		/// </summary>
-		private void OnDrawElement( Rect rect, int index, bool isActive, bool isFocused )
+		private void OnDrawElement
+		(
+			Rect rect,
+			int  index,
+			bool isActive,
+			bool isFocused
+		)
 		{
 			var element = m_property.GetArrayElementAtIndex( index );
 			rect.height -= 4;
@@ -83,7 +97,12 @@ namespace Kogane.Internal
 			}
 
 			serializedObject.Update();
+
+			var settings = ( TMPRuleSettings ) target;
+
+			OnHeaderGUI?.Invoke( settings );
 			m_reorderableList.DoLayoutList();
+			OnFooterGUI?.Invoke( settings );
 			serializedObject.ApplyModifiedProperties();
 		}
 
